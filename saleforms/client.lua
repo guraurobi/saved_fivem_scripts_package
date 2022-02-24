@@ -95,3 +95,77 @@ Citizen.CreateThread(function()
         end
     end
 end)
+
+-- Scaleform: DRAW_INSTRUCTIONAL_BUTTONS -> Buttons/controls hint message
+
+function ButtonMessage(text)
+    BeginTextCommandScaleformString("STRING")
+    AddTextComponentScaleform(text)
+    EndTextCommandScaleformString()
+end
+
+function Button(ControlButton)
+    N_0xe83a3e3557a56640(ControlButton)
+end
+
+function setupScaleform(scaleform)
+    local scaleform = RequestScaleformMovie(scaleform)
+
+    while not HasScaleformMovieLoaded(scaleform) do
+        Citizen.Wait(0)
+    end
+	
+    DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 0, 0)
+
+    PushScaleformMovieFunction(scaleform, "CLEAR_ALL")
+    PopScaleformMovieFunctionVoid()
+    
+    PushScaleformMovieFunction(scaleform, "SET_CLEAR_SPACE")
+    PushScaleformMovieFunctionParameterInt(200)
+    PopScaleformMovieFunctionVoid()
+
+    PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
+    PushScaleformMovieFunctionParameterInt(0)
+    Button(GetControlInstructionalButton(2, 191, true))
+    ButtonMessage("This is enter!")
+    PopScaleformMovieFunctionVoid()
+
+    PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
+    PushScaleformMovieFunctionParameterInt(1)
+    Button(GetControlInstructionalButton(2, 194, true)) -- The button to display
+    ButtonMessage("This is backspace!") -- the message to display next to it
+    PopScaleformMovieFunctionVoid()
+
+    PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
+    PushScaleformMovieFunctionParameterInt(2)
+    Button(GetControlInstructionalButton(2, 193, true))
+    ButtonMessage("This is space!")
+    PopScaleformMovieFunctionVoid()
+
+    PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
+    PushScaleformMovieFunctionParameterInt(3)
+    Button(GetControlInstructionalButton(2, 192, true))
+    ButtonMessage("This is tab!")
+    PopScaleformMovieFunctionVoid()
+
+    PushScaleformMovieFunction(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
+    PopScaleformMovieFunctionVoid()
+
+    PushScaleformMovieFunction(scaleform, "SET_BACKGROUND_COLOUR")
+    PushScaleformMovieFunctionParameterInt(0)
+    PushScaleformMovieFunctionParameterInt(0)
+    PushScaleformMovieFunctionParameterInt(0)
+    PushScaleformMovieFunctionParameterInt(80)
+    PopScaleformMovieFunctionVoid()
+
+    return scaleform
+end
+
+
+Citizen.CreateThread(function()
+    form = setupScaleform("instructional_buttons")
+    while true do
+        Citizen.Wait(0)
+        DrawScaleformMovieFullscreen(form, 255, 255, 255, 255, 0)
+    end
+end)
